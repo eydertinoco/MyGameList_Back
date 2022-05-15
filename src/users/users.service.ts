@@ -4,11 +4,12 @@ import { CreateUserDTO } from 'src/dto/create-user-dto';
 import { User } from 'src/entities/user.entity';
 import { getRepository } from 'typeorm';
 
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 const bcryptjs = require('bcryptjs');
 
 const jwt = require('jsonwebtoken');
-
-const JWTSecret = "TechOtakuChangeTheWorld";
 
 @Injectable()
 export class UsersService {
@@ -61,7 +62,7 @@ export class UsersService {
         const validatePassword = await bcryptjs.compare(authUser.password, user.password);
 
         if (validatePassword) {
-          let token = await jwt.sign({id: user.id, email: user.email}, JWTSecret, {expiresIn: '48h'});
+          let token = await jwt.sign({id: user.id, email: user.email}, process.env.JWTSecret, {expiresIn: '48h'});
 
           return token;
         }
@@ -71,6 +72,17 @@ export class UsersService {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  async findAll(): Promise<User[] | null> {
+    try {
+      const userRepository = await getRepository(User);
+      const users = await userRepository.find({ select: ['id', 'nickname', 'email'] });
+      return users;
+    } catch (err) {
+      console.log(err);
+    }
+    return null;
   }
 
 }
