@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { User } from './entities/user.entity';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { UsersController } from './users/users.controller';
+import { GamesModule } from './games/games.module';
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ dotenv.config();
       logging: ['error'],
     }),
     UsersModule,
+    GamesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
