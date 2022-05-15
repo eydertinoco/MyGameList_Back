@@ -6,10 +6,10 @@ export class Game {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   title: string;
 
-  @Column()
+  @Column({ unique: true })
   slug: string;
 
   @Column()
