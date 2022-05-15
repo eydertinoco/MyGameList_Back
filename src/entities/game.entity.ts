@@ -1,19 +1,37 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
-export class User {
+export class Game {
 
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()
-  nickname: string;
+  title: string;
 
   @Column()
-  email: string;
+  slug: string;
 
   @Column()
-  password: string;
+  thumbnail: string;
+
+  @Column()
+  description: string;
+
+  @Column()
+  genre: string;
+
+  @Column()
+  platform: string;
+
+  @Column()
+  publisher: string;
+
+  @Column()
+  developer: string;
+
+  @Column({ type: 'timestamp' })
+  release_date: Date;
 
   @CreateDateColumn({ type: 'timestamp', default: () => "CURRENT_TIMESTAMP(6)"})
   created_at: Date;
