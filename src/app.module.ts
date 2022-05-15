@@ -4,6 +4,11 @@ import { AppService } from './app.service';
 import 'reflect-metadata';
 import * as dotenv from 'dotenv';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './users/users.module';
+import { User } from './entities/user.entity';
+
+dotenv.config();
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -13,10 +18,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [],
+      entities: [User],
       synchronize: true,
       logging: ['error'],
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
