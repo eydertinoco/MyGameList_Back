@@ -7,7 +7,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { User } from './entities/user.entity';
 import { AuthMiddleware } from './middleware/auth.middleware';
-import { UsersController } from './users/users.controller';
 import { GamesModule } from './games/games.module';
 import { Game } from './entities/game.entity';
 import { ReviewsModule } from './reviews/reviews.module';
@@ -40,7 +39,10 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).exclude(
       { path: 'users', method: RequestMethod.POST },
-    ).forRoutes({ path: 'users', method: RequestMethod.GET });
+    ).forRoutes(
+      { path: 'users', method: RequestMethod.GET }, 
+      { path: 'reviews', method: RequestMethod.ALL }
+    );
   }
 
 }
