@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Review } from "./review.entity";
 
 @Entity()
 export class User {
@@ -14,6 +15,9 @@ export class User {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Review, (review) => review.user)
+  reviews: Review[]
 
   @CreateDateColumn({ type: 'timestamp', default: () => "CURRENT_TIMESTAMP(6)"})
   created_at: Date;
