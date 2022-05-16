@@ -57,4 +57,26 @@ export class GamesService {
     }
   }
 
+  async findOne(id: string) {
+    try {
+
+      const gameRepository = getRepository(Game);
+      const game =  await gameRepository.findOne(id);
+
+      if (!game) {
+        throw new HttpException({
+          error: 'Game not found.'
+        }, HttpStatus.NOT_FOUND);
+      }
+
+      return game;
+
+    } catch (err) {
+      throw new HttpException({
+        statusbar: HttpStatus.NOT_FOUND,
+        error: err,
+      }, HttpStatus.NOT_FOUND);
+    }
+  }
+
 }

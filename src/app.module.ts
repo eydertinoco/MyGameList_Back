@@ -10,6 +10,8 @@ import { AuthMiddleware } from './middleware/auth.middleware';
 import { UsersController } from './users/users.controller';
 import { GamesModule } from './games/games.module';
 import { Game } from './entities/game.entity';
+import { ReviewsModule } from './reviews/reviews.module';
+import { Review } from './entities/review.entity';
 
 dotenv.config();
 
@@ -22,12 +24,13 @@ dotenv.config();
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [User, Game],
+      entities: [User, Game, Review],
       synchronize: true,
       logging: ['error'],
     }),
     UsersModule,
     GamesModule,
+    ReviewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
