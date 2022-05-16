@@ -16,7 +16,7 @@ export class Game {
   @Column()
   thumbnail: string;
 
-  @Column()
+  @Column({ type: 'text' })
   description: string;
 
   @Column()
