@@ -20,7 +20,8 @@ export class UsersService {
       const userRepository = await getRepository(User);
 
       if ( await userRepository.findOne({ where: { email: createUserDto
-      .email} })) {
+      .email} }) || await userRepository.findOne({ where: { nickname: createUserDto
+        .nickname} }) ) {
         throw new HttpException(
           {
             statusbar: HttpStatus.FORBIDDEN,
