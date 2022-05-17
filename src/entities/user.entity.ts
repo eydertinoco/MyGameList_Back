@@ -7,10 +7,10 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column()
+  @Column({unique: true})
   nickname: string;
 
-  @Column()
+  @Column({unique: true})
   email: string;
 
   @Column()

@@ -19,17 +19,6 @@ export class UsersService {
     try {
       const userRepository = await getRepository(User);
 
-      if ( await userRepository.findOne({ where: { email: createUserDto
-      .email} }) || await userRepository.findOne({ where: { nickname: createUserDto
-        .nickname} }) ) {
-        throw new HttpException(
-          {
-            statusbar: HttpStatus.FORBIDDEN,
-            error: 'user already exist.'
-          }, HttpStatus.FORBIDDEN,
-        );
-      }
-
       const user = userRepository.create();
       
       user.nickname = createUserDto.nickname;
