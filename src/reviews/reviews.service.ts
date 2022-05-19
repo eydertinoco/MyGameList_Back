@@ -7,6 +7,7 @@ import { GamesService } from 'src/games/games.service';
 import { getRepository } from 'typeorm';
 
 import * as dotenv from 'dotenv';
+import { FindReviewByGamerDTO } from 'src/dto/find-review-by-game-dto';
 
 const jwt = require('jsonwebtoken');
 
@@ -57,6 +58,23 @@ export class ReviewsService {
         error: err,
       }, HttpStatus.FORBIDDEN);
     }
+  }
+
+  async getReviewByUserAndGame(findReviewByGameDto: FindReviewByGamerDTO, token: string) {
+    const reviewRepository = getRepository(Review);
+
+    const userData = jwt.verify(token, process.env.JWTSecret);
+
+    const review = await reviewRepository.findOne( 
+      { 
+        where: { 
+          user: { id: userData.id }, 
+          game: { id: findReviewByGameDto.game_id } 
+        },
+      }
+    );
+
+    return review;
   }
 
 }
