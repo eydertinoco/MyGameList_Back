@@ -6,10 +6,15 @@ import { User } from 'src/entities/user.entity';
 import { GamesService } from 'src/games/games.service';
 import { getRepository } from 'typeorm';
 
+import * as dotenv from 'dotenv';
+import { FindReviewByGamerDTO } from 'src/dto/find-review-by-game-dto';
+
+const jwt = require('jsonwebtoken');
+
 @Injectable()
 export class ReviewsService {
 
-  async create(createReviewDto: CreateReviewDTO) {
+  async create(createReviewDto: CreateReviewDTO, token: string) {
     try {
 
       const reviewRepository = getRepository(Review);
@@ -21,7 +26,9 @@ export class ReviewsService {
       review.comment = createReviewDto.comment;
       review.rate = createReviewDto.rate;
 
-      const user = await userRepository.findOne(createReviewDto.user_id);
+      const userData = jwt.verify(token, process.env.JWTSecret);
+      
+      const user = await userRepository.findOne(userData.id);
       const game = await gameRepository.findOne(createReviewDto.game_id);
 
       if (user) {
@@ -43,6 +50,7 @@ export class ReviewsService {
           error: 'User not found.',
         }, HttpStatus.NOT_FOUND);
       }
+      
 
     } catch(err) {
       throw new HttpException({
@@ -50,6 +58,23 @@ export class ReviewsService {
         error: err,
       }, HttpStatus.FORBIDDEN);
     }
+  }
+
+  async getReviewByUserAndGame(findReviewByGameDto: FindReviewByGamerDTO, token: string) {
+    const reviewRepository = getRepository(Review);
+
+    const userData = jwt.verify(token, process.env.JWTSecret);
+
+    const review = await reviewRepository.findOne( 
+      { 
+        where: { 
+          user: { id: userData.id }, 
+          game: { id: findReviewByGameDto.game_id } 
+        },
+      }
+    );
+
+    return review;
   }
 
 }
