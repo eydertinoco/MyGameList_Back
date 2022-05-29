@@ -1,7 +1,7 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Request } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateReviewDTO } from 'src/dto/create-review-dto';
-import { FindReviewByGamerDTO } from 'src/dto/find-review-by-game-dto';
+import { FindReviewByGameDTO } from 'src/dto/find-review-by-game-dto';
 import { ReviewsService } from './reviews.service';
 
 @ApiTags('reviews')
@@ -28,7 +28,7 @@ export class ReviewsController {
     
     const token = auth.split(' ')[1];
 
-    const review = new FindReviewByGamerDTO();
+    const review = new FindReviewByGameDTO();
     review.game_id = param.id;
 
     return this.reviewsService.getReviewByUserAndGame(review, token);

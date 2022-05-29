@@ -3,11 +3,9 @@ import { CreateReviewDTO } from 'src/dto/create-review-dto';
 import { Game } from 'src/entities/game.entity';
 import { Review } from 'src/entities/review.entity';
 import { User } from 'src/entities/user.entity';
-import { GamesService } from 'src/games/games.service';
 import { getRepository } from 'typeorm';
 
-import * as dotenv from 'dotenv';
-import { FindReviewByGamerDTO } from 'src/dto/find-review-by-game-dto';
+import { FindReviewByGameDTO } from 'src/dto/find-review-by-game-dto';
 
 const jwt = require('jsonwebtoken');
 
@@ -60,7 +58,7 @@ export class ReviewsService {
     }
   }
 
-  async getReviewByUserAndGame(findReviewByGameDto: FindReviewByGamerDTO, token: string) {
+  async getReviewByUserAndGame(findReviewByGameDto: FindReviewByGameDTO, token: string) {
     const reviewRepository = getRepository(Review);
 
     const userData = jwt.verify(token, process.env.JWTSecret);
