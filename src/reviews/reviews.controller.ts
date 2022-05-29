@@ -22,14 +22,14 @@ export class ReviewsController {
   }
 
   @Get(':id')
-  findByGame(@Param() param, @Request() req) {
+  findByGame(@Param('id') id: string, @Request() req) {
     const auth = req.headers['authorization'];
     if ( !auth ) return "Token Invalidate";
     
     const token = auth.split(' ')[1];
 
     const review = new FindReviewByGameDTO();
-    review.game_id = param.id;
+    review.game_id = id;
 
     return this.reviewsService.getReviewByUserAndGame(review, token);
   }
