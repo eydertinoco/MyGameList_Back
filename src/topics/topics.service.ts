@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Game } from 'src/entities/game.entity';
 import { Topic } from 'src/entities/topic.entity';
 import { User } from 'src/entities/user.entity';
@@ -46,15 +46,28 @@ export class TopicsService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} topic`;
+  async findOne(id: string) {
+    try {
+      const topicRepository = getRepository(Topic);
+      const topic =  await topicRepository.findOne(id, {relations: ['user', 'game']});
+
+      delete topic.user.password;
+      return topic;
+    } catch (err) {
+      throw new NotFoundException(err);
+    }
   }
 
-  update(id: number, updateTopicDto: UpdateTopicDto) {
+  update(id: string, updateTopicDto: UpdateTopicDto) {
     return `This action updates a #${id} topic`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} topic`;
+  async remove(id: string) {
+    try {
+      const topicRepository = getRepository(Topic);
+      return await topicRepository.delete(id);
+    } catch (err) {
+      throw new NotFoundException(err);
+    }
   }
 }
