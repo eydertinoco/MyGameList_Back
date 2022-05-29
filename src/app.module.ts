@@ -11,6 +11,7 @@ import { GamesModule } from './games/games.module';
 import { Game } from './entities/game.entity';
 import { ReviewsModule } from './reviews/reviews.module';
 import { Review } from './entities/review.entity';
+import { TopicsModule } from './topics/topics.module';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ dotenv.config();
     UsersModule,
     GamesModule,
     ReviewsModule,
+    TopicsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

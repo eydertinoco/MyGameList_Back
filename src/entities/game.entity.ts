@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Review } from "./review.entity";
+import { Topic } from "./topic.entity";
 
 @Entity()
 export class Game {
@@ -36,6 +37,9 @@ export class Game {
 
   @OneToMany(() => Review, (review) => review.game)
   reviews: Review[]
+
+  @OneToMany(() => Topic, (topic) => topic.game)
+  topics: Topic[]
 
   @CreateDateColumn({ type: 'timestamp', default: () => "CURRENT_TIMESTAMP(6)"})
   created_at: Date;
