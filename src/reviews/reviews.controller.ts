@@ -1,8 +1,11 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Request } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateReviewDTO } from 'src/dto/create-review-dto';
 import { FindReviewByGamerDTO } from 'src/dto/find-review-by-game-dto';
 import { ReviewsService } from './reviews.service';
 
+@ApiTags('reviews')
+@ApiBearerAuth()
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
