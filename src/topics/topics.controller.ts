@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nestjs/common';
 import { TopicsService } from './topics.service';
 import { CreateTopicDto } from '../dto/create-topic.dto';
 import { UpdateTopicDto } from '../dto/update-topic.dto';
@@ -11,8 +11,14 @@ export class TopicsController {
   constructor(private readonly topicsService: TopicsService) {}
 
   @Post()
-  create(@Body() createTopicDto: CreateTopicDto) {
-    return this.topicsService.create(createTopicDto);
+  create(@Body() createTopicDto: CreateTopicDto, @Request() req) {
+
+    const auth = req.headers['authorization'];
+    if ( !auth ) return;
+    
+    const token = auth.split(' ')[1];
+    
+    return this.topicsService.create(createTopicDto, token);
   }
 
   @Get()

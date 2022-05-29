@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsString } from "class-validator";
+import { IsBoolean, IsString, IsUUID } from "class-validator";
 
 export class CreateReviewDTO {
 
@@ -12,7 +12,7 @@ export class CreateReviewDTO {
   rate: boolean;
   
   @ApiProperty()
-  @IsString()
+  @IsUUID()
   game_id: string;
 
 }
