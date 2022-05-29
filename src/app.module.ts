@@ -11,6 +11,8 @@ import { GamesModule } from './games/games.module';
 import { Game } from './entities/game.entity';
 import { ReviewsModule } from './reviews/reviews.module';
 import { Review } from './entities/review.entity';
+import { TopicsModule } from './topics/topics.module';
+import { Topic } from './entities/topic.entity';
 
 dotenv.config();
 
@@ -23,13 +25,14 @@ dotenv.config();
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [User, Game, Review],
+      entities: [User, Game, Review, Topic],
       synchronize: true,
       logging: ['error'],
     }),
     UsersModule,
     GamesModule,
     ReviewsModule,
+    TopicsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -41,7 +44,8 @@ export class AppModule implements NestModule {
       { path: 'users', method: RequestMethod.POST },
     ).forRoutes(
       { path: 'users', method: RequestMethod.GET }, 
-      { path: 'reviews', method: RequestMethod.ALL }
+      { path: 'reviews', method: RequestMethod.ALL },
+      { path: 'topics', method: RequestMethod.ALL }
     );
   }
 
