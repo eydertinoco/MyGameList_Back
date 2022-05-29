@@ -5,11 +5,12 @@ import { FindReviewByGameDTO } from 'src/dto/find-review-by-game-dto';
 import { ReviewsService } from './reviews.service';
 
 @ApiTags('reviews')
-@ApiBearerAuth()
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
+  
+  @ApiBearerAuth()
   @Post()
   create(@Body() createReviewDto: CreateReviewDTO, @Request() req) {
 
@@ -21,7 +22,22 @@ export class ReviewsController {
     return this.reviewsService.create(createReviewDto, token);
   }
 
+  @Get()
+  findAll()
+  {
+    return this.reviewsService.findAll();
+  }
+
   @Get(':id')
+  findOne(@Param('id') id: string)
+  {
+    return this.reviewsService.findOne(id);
+  }
+
+  // Request reviw by User and Game
+  
+  @ApiBearerAuth()
+  @Get('/game/:id')
   findByGame(@Param('id') id: string, @Request() req) {
     const auth = req.headers['authorization'];
     if ( !auth ) return "Token Invalidate";

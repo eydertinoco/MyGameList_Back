@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateReviewDTO } from 'src/dto/create-review-dto';
 import { Game } from 'src/entities/game.entity';
 import { Review } from 'src/entities/review.entity';
@@ -29,33 +29,28 @@ export class ReviewsService {
       const user = await userRepository.findOne(userData.id);
       const game = await gameRepository.findOne(createReviewDto.game_id);
 
-      if (user) {
-        review.user = user;
-
-        if (game) {
-          review.game = game;
-          return await reviewRepository.save(review);
-        } else {
-          throw new HttpException({
-            statusbar: HttpStatus.NOT_FOUND,
-            error: 'Game not found.',
-          }, HttpStatus.NOT_FOUND);
-        }
-
-      } else {
-        throw new HttpException({
-          statusbar: HttpStatus.NOT_FOUND,
-          error: 'User not found.',
-        }, HttpStatus.NOT_FOUND);
-      }
-      
+      if ( !user ) throw new NotFoundException('User not found.');
+      if ( !game ) throw new NotFoundException('Game not found.'); 
+      review.user = user;
+      review.game = game;
+      return await reviewRepository.save(review);
 
     } catch(err) {
-      throw new HttpException({
-        statusbar: HttpStatus.FORBIDDEN,
-        error: err,
-      }, HttpStatus.FORBIDDEN);
+      throw new ForbiddenException(err);
     }
+  }
+
+  async findAll() {
+    const reviewRepository = getRepository(Review);
+    const reviews = await reviewRepository.find({ relations: ['game', 'user' ]});
+    return reviews.map((review) => { delete review.user.password; return review; });
+  }
+
+  async findOne(id: string) {
+    const reviewRepository = getRepository(Review);
+    const review = await reviewRepository.findOne(id, { relations: ['game', 'user']});
+    delete review.user.password;
+    return review;
   }
 
   async getReviewByUserAndGame(findReviewByGameDto: FindReviewByGameDTO, token: string) {
@@ -69,8 +64,11 @@ export class ReviewsService {
           user: { id: userData.id }, 
           game: { id: findReviewByGameDto.game_id } 
         },
+        relations: ['game', 'user'],
       }
     );
+
+    delete review.user.password;
 
     return review;
   }
