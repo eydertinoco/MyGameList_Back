@@ -131,7 +131,7 @@ export class UsersService {
     return 'alterado com sucesso';
   }
 
-  async changPassword(changePasswordDto: ChangePasswordDto) {
+  async changePassword(changePasswordDto: ChangePasswordDto) {
     jwt.verify(
       changePasswordDto.token,
       process.env.JWTSecret,

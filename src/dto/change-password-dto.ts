@@ -6,8 +6,6 @@ export class ChangePasswordDto {
   @IsString()
   newPassword: string;
 
-  =
-
   @ApiProperty()
   @IsString()
   token: string;
