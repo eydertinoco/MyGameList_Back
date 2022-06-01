@@ -1,15 +1,18 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { AuthUser } from 'src/dto/auth-user-dto';
 import { CreateUserDTO } from 'src/dto/create-user-dto';
 import { User } from 'src/entities/user.entity';
 import { getRepository } from 'typeorm';
 
 import * as dotenv from 'dotenv';
+import { ForgotPasswordDTO } from 'src/dto/forgot-password-dto';
 dotenv.config();
 
 const bcryptjs = require('bcryptjs');
 
 const jwt = require('jsonwebtoken');
+
+const nodemailer = require('nodemailer');
 
 @Injectable()
 export class UsersService {
@@ -62,6 +65,53 @@ export class UsersService {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDTO): Promise<string | null> {
+
+    const transport = nodemailer.createTransport({
+      host: "smtp.mailtrap.io",
+      port: 2525,
+      auth: {
+        user: "846daea9eb397f",
+        pass: "1575ab21b11200",
+      }
+    });
+
+    try {
+      
+      const userRepository = getRepository(User);
+
+      const user = await userRepository.findOne({ where: { email: forgotPasswordDto.email, }});
+
+      const token = await jwt.sign({ email: user.email, nickname: user.nickname, }, process.env.JWTSecret, {expiresIn: '2h'});
+
+      if ( user ) {
+        await transport.sendMail({
+          from: 'Equipe MyGameList <reply@mygamelist.com.br>',
+          to: `${user.email}`,
+          subject: `Olá ${user.nickname}, recebemos um pedido de alteração de senha.`,
+          html: `
+            <p>Você pode alterá-la no link: 
+              <a style="text-decoration: none; color: '#8282ff'; font-weight: bold; "  href="http://localhost:8080/changepassword?token=${token}">alterar senha</a>
+            </p> 
+
+            <br>
+            <a href="https://my-game-list-front.vercel.app/">
+              <img width="100" src="https://my-game-list-front.vercel.app/img/Controle.fb37a529.png" />
+            </a>
+            <h2>MyGameList Ltda.</h2>
+          `,
+        });
+      }
+
+    } catch (err) 
+    {
+      throw new BadRequestException(err);
+    }
+
+
+    return 'alterado com sucesso';
   }
 
   async findAll(): Promise<User[] | null> {
