@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Response } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthUser } from 'src/dto/auth-user-dto';
 import { CreateUserDTO } from 'src/dto/create-user-dto';
+import { ForgotPasswordDTO } from 'src/dto/forgot-password-dto';
 import { User } from 'src/entities/user.entity';
 import { UsersService } from './users.service';
 
@@ -18,6 +19,11 @@ export class UsersController {
   @Post('/auth')
   auth(@Body() authUser: AuthUser ) {
     return this.usersService.auth(authUser);
+  }
+
+  @Post('/forgot')
+  forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDTO) {
+    return this.usersService.forgotPassword(forgotPasswordDto);
   }
 
   @ApiBearerAuth()

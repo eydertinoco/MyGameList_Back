@@ -1,1 +1,1 @@
-export class UpdateTopicDto {}
+export class UpdateTopicDTO {}

@@ -3,14 +3,14 @@ import { Game } from 'src/entities/game.entity';
 import { Topic } from 'src/entities/topic.entity';
 import { User } from 'src/entities/user.entity';
 import { getRepository } from 'typeorm';
-import { CreateTopicDto } from '../dto/create-topic.dto';
-import { UpdateTopicDto } from '../dto/update-topic.dto';
+import { CreateTopicDTO } from '../dto/create-topic.dto';
+import { UpdateTopicDTO } from '../dto/update-topic.dto';
 
 const jwt = require('jsonwebtoken');
 
 @Injectable()
 export class TopicsService {
-  async create(createTopicDto: CreateTopicDto, token: string) {
+  async create(createTopicDto: CreateTopicDTO, token: string) {
     try {
       const topicRepository = getRepository(Topic);
       const gameRepository = getRepository(Game);
@@ -58,7 +58,7 @@ export class TopicsService {
     }
   }
 
-  update(id: string, updateTopicDto: UpdateTopicDto) {
+  update(id: string, updateTopicDto: UpdateTopicDTO) {
     return `This action updates a #${id} topic`;
   }
 

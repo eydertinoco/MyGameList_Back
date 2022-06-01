@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nestjs/common';
 import { TopicsService } from './topics.service';
-import { CreateTopicDto } from '../dto/create-topic.dto';
-import { UpdateTopicDto } from '../dto/update-topic.dto';
+import { CreateTopicDTO } from '../dto/create-topic.dto';
+import { UpdateTopicDTO } from '../dto/update-topic.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('topics')
@@ -11,7 +11,7 @@ export class TopicsController {
   constructor(private readonly topicsService: TopicsService) {}
 
   @Post()
-  create(@Body() createTopicDto: CreateTopicDto, @Request() req) {
+  create(@Body() createTopicDto: CreateTopicDTO, @Request() req) {
 
     const auth = req.headers['authorization'];
     if ( !auth ) return;
@@ -32,7 +32,7 @@ export class TopicsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTopicDto: UpdateTopicDto) {
+  update(@Param('id') id: string, @Body() updateTopicDto: UpdateTopicDTO) {
     return this.topicsService.update(id, updateTopicDto);
   }
 

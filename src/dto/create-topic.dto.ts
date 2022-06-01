@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsUUID } from "class-validator";
 
-export class CreateTopicDto {
+export class CreateTopicDTO {
 
   @ApiProperty()
   @IsString()
