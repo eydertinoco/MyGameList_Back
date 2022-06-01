@@ -151,6 +151,7 @@ export class UsersService {
               const updateUser = await getRepository(User).update(decoded.id, {
                 password: hash,
               });
+              return updateUser;
             } else {
               throw new BadRequestException('User não encotrado');
             }

@@ -27,7 +27,7 @@ export class UsersController {
     return this.usersService.forgotPassword(forgotPasswordDto);
   }
 
-  @Patch()
+  @Post('/change_password')
   changePassword(@Body() changePasswordDto: ChangePasswordDto) {
     return this.usersService.changePassword(changePasswordDto);
   }
