@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post, Response } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Response } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthUser } from 'src/dto/auth-user-dto';
+import { ChangePasswordDto } from 'src/dto/change-password-dto';
 import { CreateUserDTO } from 'src/dto/create-user-dto';
 import { ForgotPasswordDTO } from 'src/dto/forgot-password-dto';
 import { User } from 'src/entities/user.entity';
@@ -17,7 +18,7 @@ export class UsersController {
   }
 
   @Post('/auth')
-  auth(@Body() authUser: AuthUser ) {
+  auth(@Body() authUser: AuthUser) {
     return this.usersService.auth(authUser);
   }
 
@@ -26,9 +27,14 @@ export class UsersController {
     return this.usersService.forgotPassword(forgotPasswordDto);
   }
 
+  @Patch()
+  changePassword(@Body() changePasswordDto: ChangePasswordDto) {
+    return this.usersService.changePassword(changePasswordDto);
+  }
+
   @ApiBearerAuth()
   @Get()
-  findAll() { 
+  findAll() {
     return this.usersService.findAll();
   }
 }
