@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, Response } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Request, Response, UnauthorizedException } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthUser } from 'src/dto/auth-user-dto';
 import { ChangePasswordDto } from 'src/dto/change-password-dto';
@@ -36,5 +36,15 @@ export class UsersController {
   @Get()
   findAll() {
     return this.usersService.findAll();
+  }
+
+  @ApiBearerAuth()
+  @Get('/logged')
+  findOne(@Request() req) {
+    const auth = req.headers['authorization'];
+    if ( !auth ) throw new UnauthorizedException("Token Invalidate");
+    const token = auth.split(' ')[1];
+
+    return this.usersService.userLogged(token);
   }
 }

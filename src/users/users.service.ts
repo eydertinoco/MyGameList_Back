@@ -68,7 +68,7 @@ export class UsersService {
 
         if (validatePassword) {
           let token = await jwt.sign(
-            { id: user.id, email: user.email },
+            { id: user.id, nickname: user.nickname, email: user.email },
             process.env.JWTSecret,
             { expiresIn: '48h' },
           );
@@ -174,5 +174,18 @@ export class UsersService {
       console.log(err);
     }
     return null;
+  }
+
+  async userLogged(token: string): Promise<User | null> {
+    let user = null;
+    jwt.verify(token, process.env.JWTSecret, (err, decoded) => {
+      if (err) {
+        throw new HttpException('Invalidated Token', HttpStatus.UNAUTHORIZED);
+      } else {
+        user = { id: decoded.id, username: decoded.nickname, email: decoded.email };
+        return user;
+      }
+    });
+    return user;
   }
 }
