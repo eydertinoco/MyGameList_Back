@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, HttpException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateReviewDTO } from 'src/dto/create-review-dto';
 import { Game } from 'src/entities/game.entity';
 import { Review } from 'src/entities/review.entity';
@@ -41,36 +41,84 @@ export class ReviewsService {
   }
 
   async findAll() {
-    const reviewRepository = getRepository(Review);
-    const reviews = await reviewRepository.find({ relations: ['game', 'user' ]});
-    return reviews.map((review) => { delete review.user.password; return review; });
+    try {
+      const reviewRepository = getRepository(Review);
+      const reviews = await reviewRepository.find({ relations: ['game', 'user' ]});
+      return reviews.map((review) => { delete review.user.password; return review; });
+    } catch (err) {
+      if (err.status) throw new HttpException(err, err.status);
+      throw new InternalServerErrorException('Sorry :\\');
+    }
   }
 
   async findOne(id: string) {
-    const reviewRepository = getRepository(Review);
-    const review = await reviewRepository.findOne(id, { relations: ['game', 'user']});
-    delete review.user.password;
-    return review;
+    try {
+      const reviewRepository = getRepository(Review);
+      const review = await reviewRepository.findOne(id, { relations: ['game', 'user']});
+      if (review) {
+        delete review.user.password;
+        return review;
+      } else {
+        throw new NotFoundException('Review not exists.');
+      }
+    } catch (err) {
+      if (err.status) throw new HttpException(err, err.status);
+      throw new InternalServerErrorException('Sorry :\\');
+    }
+  }
+
+  async findByGame(gameID: string)
+  {
+    try {
+      const reviewRepository = getRepository(Review);
+
+      const reviews = await reviewRepository.find( 
+        { 
+          where: { 
+            game: { id: gameID } 
+          },
+          relations: ['game', 'user'],
+        }
+      );
+      
+      if (reviews && reviews.length > 0) {
+        return reviews.map((review) => { delete review.user.password; return review; });
+      } else {
+        throw new NotFoundException('Review not exists by this gameID');
+      }
+    } catch (err) {
+      if (err.status) throw new HttpException(err, err.status);
+      throw new InternalServerErrorException('Sorry :\\');
+    }
   }
 
   async getReviewByUserAndGame(findReviewByGameDto: FindReviewByGameDTO, token: string) {
-    const reviewRepository = getRepository(Review);
+    try {
+      const reviewRepository = getRepository(Review);
+      const userData = jwt.verify(token, process.env.JWTSecret);
 
-    const userData = jwt.verify(token, process.env.JWTSecret);
+      if (!userData) throw new NotFoundException('User not found.');
 
-    const review = await reviewRepository.findOne( 
-      { 
-        where: { 
-          user: { id: userData.id }, 
-          game: { id: findReviewByGameDto.game_id } 
-        },
-        relations: ['game', 'user'],
+      const review = await reviewRepository.findOne( 
+        { 
+          where: { 
+            user: { id: userData.id }, 
+            game: { id: findReviewByGameDto.game_id } 
+          },
+          relations: ['game', 'user'],
+        }
+      );
+
+      if (review) {
+        delete review.user.password;
+        return review;
+      } else {
+        throw new NotFoundException('Review not exists by this user and game.');
       }
-    );
-
-    delete review.user.password;
-
-    return review;
+    } catch (err) {
+      if (err.status) throw new HttpException(err, err.status);
+      throw new InternalServerErrorException('Sorry :\\');
+    }
   }
 
 }

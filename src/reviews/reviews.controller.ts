@@ -34,18 +34,24 @@ export class ReviewsController {
     return this.reviewsService.findOne(id);
   }
 
+  @Get('/game/:id')
+  findByGame(@Param('id') gameID: string)
+  {
+    return this.reviewsService.findByGame(gameID);
+  }
+
   // Request reviw by User and Game
   
   @ApiBearerAuth()
   @Get('/user_game/:id')
-  findByGame(@Param('id') id: string, @Request() req) {
+  findByUserAndGame(@Param('id') gameID: string, @Request() req) {
     const auth = req.headers['authorization'];
     if ( !auth ) return "Token Invalidate";
     
     const token = auth.split(' ')[1];
 
     const review = new FindReviewByGameDTO();
-    review.game_id = id;
+    review.game_id = gameID;
 
     return this.reviewsService.getReviewByUserAndGame(review, token);
   }
