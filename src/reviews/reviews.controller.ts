@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Request } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateReviewDTO } from 'src/dto/create-review-dto';
 import { FindReviewByGameDTO } from 'src/dto/find-review-by-game-dto';
 import { ReviewsService } from './reviews.service';
@@ -34,18 +34,24 @@ export class ReviewsController {
     return this.reviewsService.findOne(id);
   }
 
+  @Get('/game/:gameID')
+  findByGame(@Param('gameID') gameID: string)
+  {
+    return this.reviewsService.findByGame(gameID);
+  }
+
   // Request reviw by User and Game
   
   @ApiBearerAuth()
-  @Get('/game/:id')
-  findByGame(@Param('id') id: string, @Request() req) {
+  @Get('/user_game/:id')
+  findByUserAndGame(@Param('id') gameID: string, @Request() req) {
     const auth = req.headers['authorization'];
     if ( !auth ) return "Token Invalidate";
     
     const token = auth.split(' ')[1];
 
     const review = new FindReviewByGameDTO();
-    review.game_id = id;
+    review.game_id = gameID;
 
     return this.reviewsService.getReviewByUserAndGame(review, token);
   }
