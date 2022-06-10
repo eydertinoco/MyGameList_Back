@@ -31,6 +31,12 @@ export class TopicsController {
     return this.topicsService.findOne(id);
   }
 
+  @Get('/game/:gameID')
+  findByGame(@Param('gameID') gameID: string)
+  {
+    return this.topicsService.findByGame(gameID);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTopicDto: UpdateTopicDTO) {
     return this.topicsService.update(id, updateTopicDto);

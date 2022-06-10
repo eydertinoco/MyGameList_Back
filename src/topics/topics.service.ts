@@ -40,9 +40,10 @@ export class TopicsService {
   async findAll() {
     try {
       const topicRepository = getRepository(Topic);
-      return await topicRepository.find();
+      const topics = await topicRepository.find({relations: ['user', 'game']});
+      return topics.map( (topic) => { delete topic.content; return topic; } );
     } catch (err) {
-      throw new InternalServerErrorException(err);
+      throw new NotFoundException(err);
     }
   }
 
@@ -53,6 +54,18 @@ export class TopicsService {
 
       delete topic.user.password;
       return topic;
+    } catch (err) {
+      throw new NotFoundException(err);
+    }
+  }
+
+  async findByGame(gameID: string)
+  {
+    try {
+      const topicRepository = getRepository(Topic);
+      const topics = await topicRepository.find({ where: { game: gameID }, relations: ['user', 'game']});
+
+      return topics.map( (topic) => { delete topic.user.password; return topic; } );
     } catch (err) {
       throw new NotFoundException(err);
     }

@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Request } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateReviewDTO } from 'src/dto/create-review-dto';
 import { FindReviewByGameDTO } from 'src/dto/find-review-by-game-dto';
 import { ReviewsService } from './reviews.service';
