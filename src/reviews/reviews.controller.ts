@@ -37,7 +37,7 @@ export class ReviewsController {
   // Request reviw by User and Game
   
   @ApiBearerAuth()
-  @Get('/game/:id')
+  @Get('/user_game/:id')
   findByGame(@Param('id') id: string, @Request() req) {
     const auth = req.headers['authorization'];
     if ( !auth ) return "Token Invalidate";
