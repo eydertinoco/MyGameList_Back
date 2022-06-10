@@ -34,8 +34,8 @@ export class ReviewsController {
     return this.reviewsService.findOne(id);
   }
 
-  @Get('/game/:id')
-  findByGame(@Param('id') gameID: string)
+  @Get('/game/:gameID')
+  findByGame(@Param('gameID') gameID: string)
   {
     return this.reviewsService.findByGame(gameID);
   }
